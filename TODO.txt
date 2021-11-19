@@ -1,0 +1,25 @@
+junction commands
+------------------
+
+Commands look up cluster details in a .junctionrc file in either the working or home directory.
+If no cluster informaton present then needs to be specified using -b/--broker flag
+
+config file can have other configuration settings for publishing or subscribing and can be per topic config.
+
+values specified as command line flags override values in config file
+
+1. listen to a topic/topics:
+
+junction pull -t all_stocks
+
+2. push data to a topic:
+
+junction push -t all_stocks
+
+3. create a topic
+
+junction topics --create all_stocks
+
+4. list available topics
+
+junction topics --list
