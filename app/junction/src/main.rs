@@ -1,7 +1,6 @@
-use clap::{Args, ArgEnum, ArgGroup, AppSettings, ArgSettings, Parser};
+mod cli;
 
 use std::time::Duration;
-
 use rdkafka::ClientContext;
 use rdkafka::config::{ClientConfig, RDKafkaLogLevel};
 use rdkafka::consumer::Rebalance;
@@ -13,6 +12,7 @@ use rdkafka::message::OwnedHeaders;
 use rdkafka::producer::{FutureProducer, FutureRecord};
 use rdkafka::topic_partition_list::TopicPartitionList;
 use rdkafka::util::get_rdkafka_version;
+use cli::*;
 
 // A context can be used to change the behavior of producers and consumers by adding callbacks
 // that will be executed by librdkafka.
@@ -118,89 +118,35 @@ async fn produce(brokers: &str, topic_name: &str) {
     }
 }
 
-/// Manage Kafka clusters and send + receive messages to + from topics
-#[derive(Parser, Debug)]
-#[clap(version = "0.1", author = "Simon Collins <hello@simoncollins.dev>")]
-struct Options {
-    /// Boostrap brokers (comma separated) list.
-    /// Mandatory if not configured via .junctionrc
-    #[clap(short, long, setting(ArgSettings::UseValueDelimiter))]
-    brokers: Option<Vec<String>>,
-
-    #[clap(subcommand)]
-    sub_cmd: RootSubCommand,
-}
-
-#[derive(Parser, Debug)]
-enum RootSubCommand {
-    #[clap()]
-    Topics(Topics),
-    Push(Push),
-    Pull(Pull)
-}
-
-#[derive(Parser, Debug)]
-enum TopicsSubCommand {
-    #[clap()]
-    Delete(DeleteTopic),
-    List(ListTopics),
-    Create(CreateTopic)
-}
-
-/// Manage topics
-#[derive(Parser, Debug)]
-struct Topics {
-    #[clap(subcommand)]
-    sub_cmd: TopicsSubCommand,
-}
-
-/// Read messages from topics
-#[derive(Parser, Debug)]
-struct Push {
-    /// The topics to read from (comma delimited)
-    #[clap(short, long = "topics", value_name = "TOPICS", setting(ArgSettings::UseValueDelimiter))]
-    topic_names: Vec<String>
-}
-
-/// Send messages to a topic
-#[derive(Parser, Debug)]
-struct Pull {
-    /// The topic to send to
-    #[clap(short, long = "topic", value_name = "TOPIC")]
-    topic_name: String
-}
-
-/// Create a new topic
-#[derive(Parser, Debug)]
-struct CreateTopic {
-    /// The topic to create
-    topic_name: String
-}
-
-/// Send messages to a topic
-#[derive(Parser, Debug)]
-struct DeleteTopic {
-    /// The topic to delete
-    topic_name: String
-}
-
-/// List topics on the cluster
-#[derive(Parser, Debug)]
-struct ListTopics {
-    /// Show detailed topic information
-    #[clap(short, long = "verbose")]
-    verbose: bool
-}
-
 #[tokio::main]
 async fn main() {
-    // let opts: Opt = Opt::parse();
-    let opts: Options = Options::parse();
-    //
+    let opts: cli::Options = cli::parse_options();
 
     println!("Options: {:?}", opts);
 
-    println!("Brokers: {:?}", opts.brokers);
+    match &opts.sub_cmd {
+        RootSubCommand::Topics(topic_opts) => {
+            println!("Manage topics: {:?}", topic_opts);
+
+            match &topic_opts.sub_cmd  {
+                TopicsSubCommand::Create(create_topic_opts) => {
+                    println!("Create topic: {:?}", create_topic_opts);
+                }
+                TopicsSubCommand::List(list_topic_opts) => {
+                    println!("List topics: {:?}", list_topic_opts);
+                }
+                TopicsSubCommand::Delete(delete_topic_opts) => {
+                    println!("Delete topics: {:?}", delete_topic_opts);
+                }
+            }
+        }
+        RootSubCommand::Pull(pull_opts) => {
+            println!("Pull data from topic: {:?}", pull_opts);
+        }
+        RootSubCommand::Push(push_opts) => {
+            println!("Push data to topic: {:?}", push_opts);
+        }
+    }
 
     // let (version_n, version_s) = get_rdkafka_version();
     // println!("rd_kafka_version: 0x{:08x}, {}", version_n, version_s);
