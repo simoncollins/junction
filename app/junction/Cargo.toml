@@ -8,7 +8,7 @@ name = "ju"
 path = "src/main.rs"
 
 [dependencies]
-clap = "3.0.0-beta.5"
+clap = { version = "3.1.0", features = ["derive"] }
 tokio = { version = "1.11.0", features = ["full"] }
 serde = { version = "1.0.130", features = ["derive"] }
 rdkafka = { version = "0.25", features = ["cmake-build"] }

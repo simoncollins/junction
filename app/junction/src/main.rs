@@ -119,19 +119,19 @@ async fn produce(brokers: &str, topic_name: &str) {
 }
 
 /// Manage Kafka clusters and send + receive messages to + from topics
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 #[clap(version = "0.1", author = "Simon Collins <hello@simoncollins.dev>")]
 struct Options {
     /// Boostrap brokers (comma separated) list.
     /// Mandatory if not configured via .junctionrc
-    #[clap(short, long)]
+    #[clap(short, long, setting(ArgSettings::UseValueDelimiter))]
     brokers: Option<Vec<String>>,
 
     #[clap(subcommand)]
     sub_cmd: RootSubCommand,
 }
 
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 enum RootSubCommand {
     #[clap()]
     Topics(Topics),
@@ -139,7 +139,7 @@ enum RootSubCommand {
     Pull(Pull)
 }
 
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 enum TopicsSubCommand {
     #[clap()]
     Delete(DeleteTopic),
@@ -148,14 +148,14 @@ enum TopicsSubCommand {
 }
 
 /// Manage topics
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 struct Topics {
     #[clap(subcommand)]
     sub_cmd: TopicsSubCommand,
 }
 
 /// Read messages from topics
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 struct Push {
     /// The topics to read from (comma delimited)
     #[clap(short, long = "topics", value_name = "TOPICS", setting(ArgSettings::UseValueDelimiter))]
@@ -163,7 +163,7 @@ struct Push {
 }
 
 /// Send messages to a topic
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 struct Pull {
     /// The topic to send to
     #[clap(short, long = "topic", value_name = "TOPIC")]
@@ -171,21 +171,21 @@ struct Pull {
 }
 
 /// Create a new topic
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 struct CreateTopic {
     /// The topic to create
     topic_name: String
 }
 
 /// Send messages to a topic
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 struct DeleteTopic {
     /// The topic to delete
     topic_name: String
 }
 
 /// List topics on the cluster
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 struct ListTopics {
     /// Show detailed topic information
     #[clap(short, long = "verbose")]
@@ -197,6 +197,9 @@ async fn main() {
     // let opts: Opt = Opt::parse();
     let opts: Options = Options::parse();
     //
+
+    println!("Options: {:?}", opts);
+
     println!("Brokers: {:?}", opts.brokers);
 
     // let (version_n, version_s) = get_rdkafka_version();
@@ -208,5 +211,5 @@ async fn main() {
     let group_id = "testgroup";
 
     // produce(brokers, topic).await;
-    consume_and_print(brokers, group_id, &topics).await
+    // consume_and_print(brokers, group_id, &topics).await
 }
