@@ -47,9 +47,9 @@ pub struct Push {
 /// Send messages to a topic
 #[derive(Parser, Debug)]
 pub struct Pull {
-    /// The topic to send to
-    #[clap(short, long = "topic", value_name = "TOPIC")]
-    topic_name: String
+    /// The topics to send data to
+    #[clap(short, long = "topics", value_name = "TOPICS", setting(ArgSettings::UseValueDelimiter))]
+    topic_names: Vec<String>
 }
 
 /// Create a new topic

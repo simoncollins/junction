@@ -1,4 +1,7 @@
 mod cli;
+mod topics;
+mod pull;
+mod push;
 
 use std::time::Duration;
 use rdkafka::ClientContext;
