@@ -1,10 +1,13 @@
+mod models;
+
 use rdkafka::producer::{FutureProducer, FutureRecord};
 use std::time::Duration;
 use rdkafka::config::{ClientConfig};
 use rdkafka::message::OwnedHeaders;
+use models::PushConfig;
 
-pub fn push_data_to_topics() {
-
+pub fn push_data_to_topic(config: PushConfig) {
+    // produce(brokers, topic_name).await;
 }
 
 async fn produce(brokers: &str, topic_name: &str) {

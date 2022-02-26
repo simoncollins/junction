@@ -1,3 +1,5 @@
+mod models;
+
 use rdkafka::consumer::Rebalance;
 use rdkafka::consumer::{CommitMode, Consumer, ConsumerContext};
 use rdkafka::ClientContext;
@@ -7,9 +9,10 @@ use rdkafka::consumer::stream_consumer::StreamConsumer;
 use rdkafka::config::{ClientConfig, RDKafkaLogLevel};
 use rdkafka::message::{Headers, Message};
 use rdkafka::message::OwnedHeaders;
+use models::PullConfig;
 
-pub fn pull_data_from_topics() {
-
+pub fn pull_data_from_topics(config: PullConfig) {
+// consume_and_print(brokers, group_id, &topics).await
 }
 
 // A context can be used to change the behavior of producers and consumers by adding callbacks

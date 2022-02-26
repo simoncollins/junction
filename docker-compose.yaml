@@ -34,6 +34,7 @@ services:
       - "SERVER_SERVLET_CONTEXTPATH=/"
     depends_on:
       - kafka
+      - zookeeper
 
 volumes:
   zookeeper_data:

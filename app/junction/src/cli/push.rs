@@ -1,9 +1,9 @@
 use clap::{ArgSettings, Parser};
 
-/// Read messages from topics
+/// Write data to a topic
 #[derive(Parser, Debug)]
 pub struct Push {
-    /// The topics to read from (comma delimited)
-    #[clap(short, long = "topics", value_name = "TOPICS", setting(ArgSettings::UseValueDelimiter))]
-    topic_names: Vec<String>
+    /// The topic to push data to
+    #[clap(short, long = "topic", value_name = "TOPIC")]
+    topic_name: String
 }

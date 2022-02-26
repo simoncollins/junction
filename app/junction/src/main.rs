@@ -2,8 +2,8 @@ mod cli;
 mod topics;
 mod pull;
 mod push;
+mod models;
 
-use rdkafka::util::get_rdkafka_version;
 use cli::*;
 use cli::topics::*;
 
@@ -37,14 +37,11 @@ async fn main() {
         }
     }
 
-    // let (version_n, version_s) = get_rdkafka_version();
-    // println!("rd_kafka_version: 0x{:08x}, {}", version_n, version_s);
-
     let topic = "simontest";
     let brokers = "localhost:9094";
     let topics = vec![topic];
     let group_id = "testgroup";
 
-    // produce(brokers, topic).await;
-    // consume_and_print(brokers, group_id, &topics).await
+
+
 }
